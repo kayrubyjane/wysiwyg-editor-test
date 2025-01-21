@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test</title>
+    <!-- include libraries(jQuery, bootstrap) -->
+    <link
+      href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.js"></script>
+
+    <!-- include summernote css/js-->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.8/summernote.js"></script>
+
+    <!-- KaTeX -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
+
+    <script src="../summernote-math.js"></script>
+
+    <style>
+      /* Optional styling for better formula rendering */
+      .preview {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <form> -->
+    <textarea id="summernote" name="editordata"></textarea>
+
+    <button id="btnKirim">Kirim</button>
+
+    <div class="preview" id="preview"></div>
+    <!-- </form> -->
+    <script>
+      const kirim = document.getElementById("btnKirim");
+      const preview = document.getElementById("preview");
+
+      $(document).ready(function () {
+        // Initialize Summernote
+        $("#summernote").summernote({
+          placeholder:
+            "Masukkan data di sini, gunakan \\(\\) atau \\[\\] untuk LaTeX",
+          tabsize: 2,
+          height: 400,
+          toolbar: [
+            ["style", ["style"]],
+            ["font", ["bold", "italic", "underline", "clear"]],
+            ["color", ["color"]],
+            ["para", ["ul", "ol", "paragraph"]],
+            ["table", ["table"]],
+            ["insert", ["link", "picture", "video", "math"]],
+            ["view", ["codeview", "fullscreen"]],
+          ],
+        });
+      });
+
+      kirim.addEventListener("click", () => {
+        const hasil = document.getElementById("summernote").value;
+
+        preview.innerHTML = hasil;
+      });
+    </script>
+  </body>
+</html>
