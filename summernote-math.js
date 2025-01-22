@@ -69,7 +69,6 @@
                     container: false,
                     tooltip: lang.math.tooltip,
                     click: function (e) {
-                        // Cursor position must be saved because is lost when popup is opened.
                         context.invoke('editor.saveRange');
                         context.invoke('math.show');
                     }
@@ -80,7 +79,8 @@
             self.initialize = function () {
                 let $container = options.dialogsInBody ? $(document.body) : $editor;
                 let presetsButtons = options.math.presets.map(preset => {
-                    return `<button class="btn btn-light note-math-preset" data-latex="${preset.latex}">
+                    return `
+                        <button type="button" class="btn btn-light note-math-preset" data-latex="${preset.latex}">
                             ${preset.name}
                         </button>`;
                 }).join(' ');
