@@ -80,7 +80,7 @@
                 let $container = options.dialogsInBody ? $(document.body) : $editor;
                 let presetsButtons = options.math.presets.map(preset => {
                     return `
-                        <button type="button" class="btn btn-light note-math-preset" data-latex="${preset.latex}">
+                        <button type="button" class="btn btn-light note-math-preset my-1" data-latex="${preset.latex}">
                             ${preset.name}
                         </button>`;
                 }).join(' ');
