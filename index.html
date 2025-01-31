@@ -51,21 +51,17 @@
         margin-top: 10px;
         resize: both;
         overflow: auto;
-        width: 100px;
-        height: 100px;
+        width: 300px;
+        height: 300px;
       }
     </style>
   </head>
   <body>
-    <!-- <form> -->
     <textarea id="summernote" name="editordata"></textarea>
 
     <button id="btnKirim">Kirim</button>
 
-    <div class="preview container-fluid" id="preview">
-      <!-- <img src="https://akcdn.detik.net.id/visual/2025/01/12/soccer_169.png?w=650&q=90" class="img-fluid" /> -->
-    </div>
-    <!-- </form> -->
+    <div class="preview container-fluid" id="preview"></div>
     <script>
       const kirim = document.getElementById("btnKirim");
       const preview = document.getElementById("preview");
