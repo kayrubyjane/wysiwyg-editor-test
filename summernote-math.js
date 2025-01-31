@@ -270,6 +270,7 @@
                         context.triggerEvent('dialog.shown');
                         $editBtn.click(function (e) {
                             e.preventDefault();
+                            self.$dialog.find('.note-latex').val('')
                             deferred.resolve({
 
                             });
