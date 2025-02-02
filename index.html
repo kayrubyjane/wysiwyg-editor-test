@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test</title>
+    <!-- include libraries(jQuery, bootstrap) -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
+
+    <script src="../summernote-math.js"></script>
+
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
+
+    <style>
+      /* Optional styling for better formula rendering */
+      .preview {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+        resize: both;
+        overflow: auto;
+        width: 300px;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="summernote" name="editordata"></textarea>
+
+    <button id="btnKirim">Kirim</button>
+
+    <div class="preview container-fluid" id="preview"></div>
+    <script>
+      const kirim = document.getElementById("btnKirim");
+      const preview = document.getElementById("preview");
+
+      $(document).ready(function () {
+        // Initialize Summernote
+        $("#summernote").summernote({
+          placeholder:
+            "Masukkan data di sini, gunakan \\(\\) atau \\[\\] untuk LaTeX",
+          tabsize: 2,
+          height: 400,
+          callbacks: {
+            onImageUpload: function (files) {
+              const editor = $(this);
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                const imgNode = $("<img>")
+                  .attr("src", e.target.result)
+                  .addClass("img-fluid");
+                editor.summernote("insertNode", imgNode[0]);
+              };
+              reader.readAsDataURL(files[0]);
+            },
+            onImageLinkInsert: function (url) {
+              const imgNode = $("<img>").attr("src", url).addClass("img-fluid");
+              $("#summernote").summernote("insertNode", imgNode[0]);
+            },
+          },
+          toolbar: [
+            ["style", ["style"]],
+            ["font", ["bold", "italic", "underline", "clear"]],
+            ["color", ["color"]],
+            ["para", ["ul", "ol", "paragraph"]],
+            ["table", ["table"]],
+            ["insert", ["link", "picture", "video", "math"]],
+            ["view", ["codeview", "fullscreen"]],
+          ],
+        });
+      });
+
+      kirim.addEventListener("click", () => {
+        const hasil = document.getElementById("summernote").value;
+
+        preview.innerHTML = hasil;
+      });
+    </script>
+  </body>
+</html>
