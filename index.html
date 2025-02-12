@@ -67,27 +67,6 @@
       const kirim = document.getElementById("btnKirim");
       const preview = document.getElementById("preview");
 
-      // Konfigurasi Supabase
-      const supabaseUrl = `postgresql://postgres:${supabaseKey}@db.sffssxxfkzoskcwvvuhb.supabase.co:5432/postgres`; // Ganti dengan URL dari Supabase
-      const supabaseKey = "summernote"; // Ganti dengan API Key dari Supabase
-      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-      kirim.addEventListener("click", async () => {
-        const hasil = document.getElementById("summernote").value; // Ambil konten dari Summernote
-
-        // Simpan ke Supabase
-        const { data, error } = await supabase
-          .from("editor_data") // Ganti dengan nama tabel di Supabase
-          .insert([{ editordata: hasil }]);
-
-        if (error) {
-          alert("Gagal menyimpan data: " + error.message);
-        } else {
-          alert("Data berhasil disimpan!");
-          $("#summernote").summernote("reset"); // Kosongkan textarea setelah insert
-        }
-      });
-
       $(document).ready(function () {
         $("#summernote").summernote({
           placeholder:
