@@ -74,6 +74,13 @@
           tabsize: 2,
           height: 400,
           callbacks: {
+            onPaste: function (e) {
+              e.preventDefault();
+              let text = (e.originalEvent || e).clipboardData.getData(
+                "text/plain"
+              );
+              document.execCommand("insertText", false, text);
+            },
             onImageUpload: function (files) {
               const editor = $(this);
               const reader = new FileReader();
