@@ -43,17 +43,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
 
     <style>
-      /* Optional styling for better formula rendering */
-      .preview {
-        background-color: #f9f9f9;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        margin-top: 10px;
-        resize: both;
+      .preview-container {
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        min-height: 200px;
+        max-width: 100%;
         overflow: auto;
-        width: 300px;
-        height: 300px;
       }
     </style>
   </head>
@@ -63,10 +61,54 @@
     <button id="btnKirim">Kirim</button>
 
     <div class="preview container-fluid" id="preview"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+      // Inisialisasi Supabase
       const kirim = document.getElementById("btnKirim");
-      const preview = document.getElementById("preview");
+      const supabaseUrl = "https://sffssxxfkzoskcwvvuhb.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmZnNzeHhma3pvc2tjd3Z2dWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkzNTQyMzAsImV4cCI6MjA1NDkzMDIzMH0.93EXBWWy785dVcKOQoWYAIITfE0QaTI5kcTvyj7axZM";
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
+      kirim.addEventListener("click", async () => {
+        const hasil = document.getElementById("summernote").value;
+
+        // Menyimpan ke Supabase
+        const { data, error } = await supabase
+          .from("note")
+          .insert([{ isi: hasil }]);
+
+        if (error) {
+          alert("Gagal menyimpan: " + error.message);
+        } else {
+          alert("Data berhasil disimpan!");
+          loadPreview();
+        }
+      });
+
+      async function loadPreview() {
+        const { data, error } = await supabase
+          .from("note")
+          .select("isi")
+          .order("id", { ascending: false });
+
+        if (error) {
+          console.error("Gagal mengambil data:", error.message);
+          return;
+        }
+
+        if (data.length > 0) {
+          document.getElementById("preview").innerHTML = data[0].isi;
+        } else {
+          document.getElementById("preview").innerHTML =
+            "<i>Belum ada catatan.</i>";
+        }
+      }
+
+      loadPreview();
+    </script>
+
+    <script>
       $(document).ready(function () {
         $("#summernote").summernote({
           placeholder:
@@ -114,7 +156,7 @@
             ["style", ["style"]],
             ["font", ["bold", "italic", "underline", "clear"]],
             ["fontsize", ["fontsize"]],
-            ["fontname", ["fontname"]], // Menambahkan dropdown font
+            ["fontname", ["fontname"]],
             ["color", ["color"]],
             ["para", ["ul", "ol", "paragraph"]],
             ["table", ["table"]],
@@ -122,12 +164,6 @@
             ["view", ["codeview", "fullscreen"]],
           ],
         });
-      });
-
-      kirim.addEventListener("click", () => {
-        const hasil = document.getElementById("summernote").value;
-
-        preview.innerHTML = hasil;
       });
     </script>
   </body>
