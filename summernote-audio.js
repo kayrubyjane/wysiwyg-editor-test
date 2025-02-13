@@ -73,11 +73,15 @@
                             self.showAudioDialog().then(function (audioFile) {
                                    ui.hideDialog(self.$dialog);
                                    if (audioFile) {
-                                          let objectURL = URL.createObjectURL(audioFile);
-                                          let audioHTML = `<audio controls><source src="${objectURL}" type="${audioFile.type}"></audio>`;
-                                          context.invoke("editor.restoreRange");
-                                          context.invoke("editor.focus");
-                                          context.invoke("editor.pasteHTML", audioHTML);
+                                          let reader = new FileReader();
+                                          reader.onload = function (e) {
+                                                 let base64Audio = e.target.result;
+                                                 let audioHTML = `<audio controls><source src="${base64Audio}" type="${audioFile.type}"></audio>`;
+                                                 context.invoke("editor.restoreRange");
+                                                 context.invoke("editor.focus");
+                                                 context.invoke("editor.pasteHTML", audioHTML);
+                                          };
+                                          reader.readAsDataURL(audioFile); // Konversi ke Base64
                                    }
                                    $audioInput.val(""); // Kosongkan input setelah insert
                             });
