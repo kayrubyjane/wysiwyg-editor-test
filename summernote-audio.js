@@ -11,7 +11,7 @@
               "en-US": {
                      audio: {
                             dialogTitle: "Insert Audio",
-                            tooltip: "Insert Audio",
+                            tooltip: "Audio",
                             pluginTitle: "Insert audio",
                             ok: "Insert",
                             cancel: "Cancel",
@@ -49,8 +49,8 @@
                      self.initialize = function () {
                             let $container = options.dialogsInBody ? $(document.body) : $editor;
                             let body = `<div class="form-group">
-                           <p>Select Audio File:</p>
-                           <input type="file" class="note-audio-file form-control" accept="audio/*">
+                           <p>Enter Audio URL:</p>
+                           <input type="text" class="note-audio-url form-control" placeholder="https://example.com/audio.mp3">
                          </div>`;
 
                             self.$dialog = ui
@@ -67,21 +67,16 @@
                      };
 
                      self.show = function () {
-                            let $audioInput = self.$dialog.find(".note-audio-file");
+                            let $audioInput = self.$dialog.find(".note-audio-url");
                             $audioInput.val(""); // Kosongkan input saat dialog dibuka
 
-                            self.showAudioDialog().then(function (audioFile) {
+                            self.showAudioDialog().then(function (audioURL) {
                                    ui.hideDialog(self.$dialog);
-                                   if (audioFile) {
-                                          let reader = new FileReader();
-                                          reader.onload = function (e) {
-                                                 let base64Audio = e.target.result;
-                                                 let audioHTML = `<audio controls><source src="${base64Audio}" type="${audioFile.type}"></audio>`;
-                                                 context.invoke("editor.restoreRange");
-                                                 context.invoke("editor.focus");
-                                                 context.invoke("editor.pasteHTML", audioHTML);
-                                          };
-                                          reader.readAsDataURL(audioFile); // Konversi ke Base64
+                                   if (audioURL) {
+                                          let audioHTML = `<audio controls><source src="${audioURL}" type="audio/mpeg"></audio>`;
+                                          context.invoke("editor.restoreRange");
+                                          context.invoke("editor.focus");
+                                          context.invoke("editor.pasteHTML", audioHTML);
                                    }
                                    $audioInput.val(""); // Kosongkan input setelah insert
                             });
@@ -90,15 +85,15 @@
                      self.showAudioDialog = function () {
                             return $.Deferred(function (deferred) {
                                    let $insertBtn = self.$dialog.find(".note-audio-btn");
-                                   let $audioInput = self.$dialog.find(".note-audio-file");
+                                   let $audioInput = self.$dialog.find(".note-audio-url");
 
                                    ui.onDialogShown(self.$dialog, function () {
                                           context.triggerEvent("dialog.shown");
                                           $insertBtn.click(function (e) {
                                                  e.preventDefault();
-                                                 let file = $audioInput[0].files[0];
-                                                 if (file) {
-                                                        deferred.resolve(file);
+                                                 let url = $audioInput.val().trim();
+                                                 if (url) {
+                                                        deferred.resolve(url);
                                                  } else {
                                                         deferred.reject();
                                                  }

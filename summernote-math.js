@@ -9,10 +9,9 @@
 })(function ($) {
   $.extend(true, $.summernote.lang, {
     "en-US": {
-      /* English */
       math: {
         dialogTitle: "Insert Math",
-        tooltip: "Insert Math",
+        tooltip: "Math",
         pluginTitle: "Insert math",
         ok: "Insert",
         cancel: "Cancel",
@@ -159,9 +158,18 @@
           let latex = $(this).data("latex");
           let $latexInput = self.$dialog.find(".note-latex");
 
-          // Menambahkan teks baru tanpa menghapus teks yang sudah ada sebelumnya
-          let existingLatex = $latexInput.val();
-          $latexInput.val(existingLatex + latex).trigger("keyup");
+          // Dapatkan posisi kursor di input
+          let cursorPos = $latexInput[0].selectionStart;
+          let textBefore = $latexInput.val().substring(0, cursorPos);
+          let textAfter = $latexInput.val().substring(cursorPos);
+
+          // Sisipkan teks di posisi kursor
+          $latexInput.val(textBefore + latex + textAfter).trigger("keyup");
+
+          // Update posisi kursor setelah teks yang disisipkan
+          let newCursorPos = cursorPos + latex.length;
+          $latexInput[0].selectionStart = newCursorPos;
+          $latexInput[0].selectionEnd = newCursorPos;
 
           // Update preview
           let $mathSpan = self.$dialog.find(".note-math-dialog");
@@ -172,6 +180,7 @@
           }
         });
       };
+
 
 
       self.hasMath = function (node) {
