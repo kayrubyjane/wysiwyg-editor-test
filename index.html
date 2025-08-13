@@ -34,6 +34,7 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
 
     <script src="../summernote-math.js"></script>
+    <script src="../summernote-audio.js"></script>
 
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css"
@@ -42,17 +43,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.js"></script>
 
     <style>
-      /* Optional styling for better formula rendering */
-      .preview {
-        background-color: #f9f9f9;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        margin-top: 10px;
-        resize: both;
+      .preview-container {
+        background-color: #f8f9fa;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 20px;
+        min-height: 200px;
+        max-width: 100%;
         overflow: auto;
-        width: 300px;
-        height: 300px;
       }
     </style>
   </head>
@@ -62,18 +61,22 @@
     <button id="btnKirim">Kirim</button>
 
     <div class="preview container-fluid" id="preview"></div>
-    <script>
-      const kirim = document.getElementById("btnKirim");
-      const preview = document.getElementById("preview");
 
+    <script>
       $(document).ready(function () {
-        // Initialize Summernote
         $("#summernote").summernote({
           placeholder:
             "Masukkan data di sini, gunakan \\(\\) atau \\[\\] untuk LaTeX",
           tabsize: 2,
           height: 400,
           callbacks: {
+            onPaste: function (e) {
+              e.preventDefault();
+              let text = (e.originalEvent || e).clipboardData.getData(
+                "text/plain"
+              );
+              document.execCommand("insertText", false, text);
+            },
             onImageUpload: function (files) {
               const editor = $(this);
               const reader = new FileReader();
@@ -90,22 +93,31 @@
               $("#summernote").summernote("insertNode", imgNode[0]);
             },
           },
+          fontNames: [
+            "Arial",
+            "Arial Black",
+            "Comic Sans MS",
+            "Courier New",
+            "Georgia",
+            "Helvetica",
+            "Impact",
+            "Tahoma",
+            "Times New Roman",
+            "Verdana",
+            "Sans Serif",
+          ],
           toolbar: [
             ["style", ["style"]],
             ["font", ["bold", "italic", "underline", "clear"]],
+            ["fontsize", ["fontsize"]],
+            ["fontname", ["fontname"]],
             ["color", ["color"]],
             ["para", ["ul", "ol", "paragraph"]],
             ["table", ["table"]],
-            ["insert", ["link", "picture", "video", "math"]],
+            ["insert", ["link", "picture", "video", "audio", "math"]],
             ["view", ["codeview", "fullscreen"]],
           ],
         });
-      });
-
-      kirim.addEventListener("click", () => {
-        const hasil = document.getElementById("summernote").value;
-
-        preview.innerHTML = hasil;
       });
     </script>
   </body>
